@@ -1,0 +1,52 @@
+{
+  "customFileOrder.rules": {
+    "c:\\Users\\kmmd4\\Desktop\\projects2026\\lms_project": {
+      "order": [
+        "app",
+        "config.py",
+        "run.py",
+        "requirements.txt",
+        "lmsReq",
+        ".vscode"
+      ],
+      "type": "manual"
+    },
+    "c:\\Users\\kmmd4\\Desktop\\projects2026\\lms_project\\app": {
+      "order": [
+        "__init__.py",
+        "models.py",
+        "routes.py",
+        "auth.py",
+        "templates",
+        "static"
+      ],
+      "type": "manual"
+    },
+    "c:\\Users\\kmmd4\\Desktop\\projects2026\\lms_project_prototype": {
+      "order": [
+        "__pycache__",
+        ".vscode",
+        "lmsReq",
+        "app",
+        "run.py",
+        "config.py",
+        ".gitattributes",
+        "instance",
+        "requirements.txt"
+      ],
+      "type": "manual"
+    },
+    "c:\\Users\\kmmd4\\Desktop\\projects2026\\lms_project_prototype\\app": {
+      "order": [
+        "__pycache__",
+        "__init__.py",
+        "models.py",
+        "auth.py",
+        "routes.py",
+        "templates",
+        "static"
+      ],
+      "type": "manual"
+    }
+  }
+}
