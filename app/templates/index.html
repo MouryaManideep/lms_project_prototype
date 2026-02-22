@@ -1,4 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Welcome to LMS</h1>
+
+<h1>All Courses</h1>
+
+{% if current_user.is_authenticated and current_user.role == "instructor" %}
+    <a href="/create-course">Create New Course</a>
+    <br><br>
+{% endif %}
+
+{% for course in courses %}
+    <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
+        <h3>{{ course.title }}</h3>
+        <p>{{ course.description }}</p>
+        <small>Instructor: {{ course.instructor.username }}</small>
+    </div>
+{% else %}
+    <p>No courses available.</p>
+{% endfor %}
+
 {% endblock %}

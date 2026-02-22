@@ -8,6 +8,13 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(200), nullable=False)
     role = db.Column(db.String(50), nullable=False, default="student")
     
+class Course(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+
+    instructor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    instructor = db.relationship('User', backref='courses')
 
 @login_manager.user_loader
 def load_user(user_id):
