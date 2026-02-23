@@ -36,18 +36,11 @@ class Course(db.Model):
     title = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
 
-    # Foreign key linking course to instructor (User)
+    # NEW: thumbnail image URL
+    thumbnail = db.Column(db.String(300), nullable=True)
+
     instructor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    # Relationship to access instructor details
     instructor = db.relationship('User', backref='courses')
-
-    # If course is deleted → delete all related enrollments
-    enrollments = db.relationship(
-        'Enrollment',
-        backref='course',
-        cascade="all, delete-orphan"
-    )
 
 
 # ----------------------------------

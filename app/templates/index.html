@@ -2,69 +2,113 @@
 {% block content %}
 
 <h2 class="mb-4">All Courses</h2>
-<form method="GET" action="/" class="mb-4">
-    <div class="input-group">
-        <input type="text"
-               name="search"
-               class="form-control"
-               placeholder="Search courses...">
 
-        <button class="btn btn-outline-primary" type="submit">
-            Search
+<!-- SORT FILTER -->
+<form method="GET" class="row mb-4">
+
+    <div class="col-md-4">
+        <select name="sort" class="form-select">
+            <option value="title"
+                {% if sort_by == "title" %}selected{% endif %}>
+                Alphabetical
+            </option>
+
+            <option value="instructor"
+                {% if sort_by == "instructor" %}selected{% endif %}>
+                Instructor
+            </option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <select name="order" class="form-select">
+            <option value="asc"
+                {% if order == "asc" %}selected{% endif %}>
+                Ascending
+            </option>
+
+            <option value="desc"
+                {% if order == "desc" %}selected{% endif %}>
+                Descending
+            </option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <button class="btn btn-primary w-100">
+            Apply
         </button>
     </div>
+
 </form>
 
-{% if current_user.is_authenticated and current_user.role == "instructor" %}
-    <a href="/create-course" class="btn btn-success mb-4">
-        Create New Course
-    </a>
-{% endif %}
+<div class="row">
 
 {% for course in courses %}
 
-<div class="card mb-4 shadow-sm">
-    <div class="card-body">
+<div class="col-md-4 mb-4">
 
-        <h4 class="card-title">{{ course.title }}</h4>
-        <p class="card-text">{{ course.description }}</p>
+    <div class="card h-100 shadow-sm">
 
-        {% if course.instructor %}
+        {% if course.thumbnail %}
+            <img src="{{ course.thumbnail }}"
+                 class="card-img-top"
+                 style="height:200px; object-fit:cover;">
+        {% endif %}
+
+        <div class="card-body">
+
+            <h5>{{ course.title }}</h5>
+            <p>{{ course.description[:80] }}...</p>
+
             <p class="text-muted">
                 Instructor: {{ course.instructor.username }}
             </p>
+
+        </div>
+
+        <div class="card-footer bg-white">
+
+        {% if current_user.is_authenticated and current_user.role == "student" %}
+
+            {% if course.id in enrolled_course_ids %}
+                <a href="/unenroll/{{ course.id }}"
+                   class="btn btn-outline-danger btn-sm w-100">
+                   Enrolled
+                </a>
+            {% else %}
+                <a href="/enroll/{{ course.id }}"
+                   class="btn btn-primary btn-sm w-100">
+                   Enroll
+                </a>
+            {% endif %}
+
         {% endif %}
 
-        <!-- Instructor Controls -->
         {% if current_user.is_authenticated
               and current_user.role == "instructor"
               and course.instructor_id == current_user.id %}
 
             <a href="/edit-course/{{ course.id }}"
-               class="btn btn-warning btn-sm">Edit</a>
+               class="btn btn-warning btn-sm w-100 mb-2">
+               Edit
+            </a>
 
             <a href="/delete-course/{{ course.id }}"
-               class="btn btn-danger btn-sm">Delete</a>
-        {% endif %}
-
-        <!-- Student Controls -->
-        {% if current_user.is_authenticated and current_user.role == "student" %}
-
-            {% if enrolled_course_ids is defined and course.id in enrolled_course_ids %}
-                <a href="/unenroll/{{ course.id }}"
-                   class="btn btn-outline-danger btn-sm">Unenroll</a>
-            {% else %}
-                <a href="/enroll/{{ course.id }}"
-                   class="btn btn-primary btn-sm">Enroll</a>
-            {% endif %}
+                class="btn btn-danger btn-sm w-100">
+                Delete
+            </a>
 
         {% endif %}
+
+        </div>
 
     </div>
+
 </div>
 
-{% else %}
-    <p>No courses available.</p>
 {% endfor %}
+
+</div>
 
 {% endblock %}
