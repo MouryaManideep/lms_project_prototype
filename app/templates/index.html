@@ -1,19 +1,68 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>All Courses</h1>
+<h2 class="mb-4">All Courses</h2>
+<form method="GET" action="/" class="mb-4">
+    <div class="input-group">
+        <input type="text"
+               name="search"
+               class="form-control"
+               placeholder="Search courses...">
+
+        <button class="btn btn-outline-primary" type="submit">
+            Search
+        </button>
+    </div>
+</form>
 
 {% if current_user.is_authenticated and current_user.role == "instructor" %}
-    <a href="/create-course">Create New Course</a>
-    <br><br>
+    <a href="/create-course" class="btn btn-success mb-4">
+        Create New Course
+    </a>
 {% endif %}
 
 {% for course in courses %}
-    <div style="border:1px solid black; padding:10px; margin-bottom:10px;">
-        <h3>{{ course.title }}</h3>
-        <p>{{ course.description }}</p>
-        <small>Instructor: {{ course.instructor.username }}</small>
+
+<div class="card mb-4 shadow-sm">
+    <div class="card-body">
+
+        <h4 class="card-title">{{ course.title }}</h4>
+        <p class="card-text">{{ course.description }}</p>
+
+        {% if course.instructor %}
+            <p class="text-muted">
+                Instructor: {{ course.instructor.username }}
+            </p>
+        {% endif %}
+
+        <!-- Instructor Controls -->
+        {% if current_user.is_authenticated
+              and current_user.role == "instructor"
+              and course.instructor_id == current_user.id %}
+
+            <a href="/edit-course/{{ course.id }}"
+               class="btn btn-warning btn-sm">Edit</a>
+
+            <a href="/delete-course/{{ course.id }}"
+               class="btn btn-danger btn-sm">Delete</a>
+        {% endif %}
+
+        <!-- Student Controls -->
+        {% if current_user.is_authenticated and current_user.role == "student" %}
+
+            {% if enrolled_course_ids is defined and course.id in enrolled_course_ids %}
+                <a href="/unenroll/{{ course.id }}"
+                   class="btn btn-outline-danger btn-sm">Unenroll</a>
+            {% else %}
+                <a href="/enroll/{{ course.id }}"
+                   class="btn btn-primary btn-sm">Enroll</a>
+            {% endif %}
+
+        {% endif %}
+
     </div>
+</div>
+
 {% else %}
     <p>No courses available.</p>
 {% endfor %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">
+    Students Enrolled in "{{ course.title }}"
+</h2>
+
+<p><strong>Total Students:</strong>
+    {{ course.enrollments|length }}
+</p>
+
+<hr>
+
+{% if course.enrollments %}
+
+<ul class="list-group mb-3">
+    {% for enrollment in course.enrollments %}
+        <li class="list-group-item">
+            {{ enrollment.student.username }}
+            ({{ enrollment.student.email }})
+        </li>
+    {% endfor %}
+</ul>
+
+{% else %}
+    <p>No students enrolled yet.</p>
+{% endif %}
+
+<a href="/dashboard" class="btn btn-secondary">
+    Back to Dashboard
+</a>
+
+{% endblock %}
