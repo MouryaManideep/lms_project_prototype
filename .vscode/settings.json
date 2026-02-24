@@ -28,8 +28,8 @@
         ".vscode",
         "lmsReq",
         "app",
-        "run.py",
         "config.py",
+        "run.py",
         ".gitattributes",
         "instance",
         "requirements.txt"
