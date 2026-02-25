@@ -44,70 +44,54 @@
 
 <div class="row">
 
+<div class="row">
 {% for course in courses %}
+    <div class="col-md-4 mb-4">
 
-<div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
 
-    <div class="card h-100 shadow-sm">
-
-        {% if course.thumbnail %}
-            <img src="{{ course.thumbnail }}"
+            <!-- COURSE IMAGE -->
+            <img src="{{ course.thumbnail }}?auto=format&fit=crop&w=800&q=80"
                  class="card-img-top"
                  style="height:200px; object-fit:cover;">
-        {% endif %}
 
-        <div class="card-body">
+            <div class="card-body">
 
-            <h5>{{ course.title }}</h5>
-            <p>{{ course.description[:80] }}...</p>
+                <h5 class="card-title">{{ course.title }}</h5>
 
-            <p class="text-muted">
-                Instructor: {{ course.instructor.username }}
-            </p>
+                <p class="card-text">
+                    {{ course.description[:100] }}...
+                </p>
 
-        </div>
+                <small class="text-muted">
+                    Instructor: {{ course.instructor.username }}
+                </small>
 
-        <div class="card-footer bg-white">
+                <br><br>
 
-        {% if current_user.is_authenticated and current_user.role == "student" %}
+                <!-- Instructor Controls -->
+                {% if current_user.is_authenticated
+                      and current_user.role == "instructor"
+                      and course.instructor_id == current_user.id %}
+                    <a href="/edit-course/{{ course.id }}" class="btn btn-warning btn-sm">Edit</a>
+                    <a href="/delete-course/{{ course.id }}" class="btn btn-danger btn-sm">Delete</a>
+                {% endif %}
 
-            {% if course.id in enrolled_course_ids %}
-                <a href="/unenroll/{{ course.id }}"
-                   class="btn btn-outline-danger btn-sm w-100">
-                   Enrolled
-                </a>
-            {% else %}
-                <a href="/enroll/{{ course.id }}"
-                   class="btn btn-primary btn-sm w-100">
-                   Enroll
-                </a>
-            {% endif %}
+                <!-- Student Enroll -->
+                {% if current_user.is_authenticated and current_user.role == "student" %}
+                    {% if course.id in enrolled_course_ids %}
+                        <button class="btn btn-success btn-sm" disabled>Enrolled</button>
+                    {% else %}
+                        <a href="/enroll/{{ course.id }}" class="btn btn-primary btn-sm">Enroll</a>
+                    {% endif %}
+                {% endif %}
 
-        {% endif %}
-
-        {% if current_user.is_authenticated
-              and current_user.role == "instructor"
-              and course.instructor_id == current_user.id %}
-
-            <a href="/edit-course/{{ course.id }}"
-               class="btn btn-warning btn-sm w-100 mb-2">
-               Edit
-            </a>
-
-            <a href="/delete-course/{{ course.id }}"
-                class="btn btn-danger btn-sm w-100">
-                Delete
-            </a>
-
-        {% endif %}
-
+            </div>
         </div>
 
     </div>
-
-</div>
-
 {% endfor %}
+</div>
 
 </div>
 

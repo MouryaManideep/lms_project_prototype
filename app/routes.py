@@ -237,17 +237,20 @@ def student_dashboard():
 @role_required("student")
 def unenroll(course_id):
 
+    # Find enrollment
     enrollment = Enrollment.query.filter_by(
         student_id=current_user.id,
         course_id=course_id
     ).first()
 
+    # Delete only if exists
     if enrollment:
         db.session.delete(enrollment)
         db.session.commit()
         flash("Unenrolled successfully!")
 
-    return redirect(url_for("main.home"))
+    # Always go back to student dashboard
+    return redirect(url_for("main.student_dashboard"))
 
 
 # ----------------------------------

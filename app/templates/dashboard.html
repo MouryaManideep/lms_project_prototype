@@ -1,49 +1,74 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h2 class="mb-4">Instructor Dashboard</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Instructor Dashboard</h2>
+    <a href="/create-course" class="btn btn-primary">
+        + Create Course
+    </a>
+</div>
 
 <div class="row mb-4">
-
     <div class="col-md-6">
-        <div class="card bg-primary text-white p-3">
-            <h5>Total Courses</h5>
-            <h2>{{ total_courses }}</h2>
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Total Courses</h5>
+                <h3>{{ total_courses }}</h3>
+            </div>
         </div>
     </div>
 
     <div class="col-md-6">
-        <div class="card bg-success text-white p-3">
-            <h5>Total Enrollments</h5>
-            <h2>{{ total_students }}</h2>
+        <div class="card text-center shadow-sm">
+            <div class="card-body">
+                <h5>Total Enrollments</h5>
+                <h3>{{ total_students }}</h3>
+            </div>
         </div>
     </div>
-
 </div>
 
+{% if courses %}
+    <div class="row">
+    {% for course in courses %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
 
-{% for course in courses %}
+                <img src="{{ course.thumbnail }}?auto=format&fit=crop&w=800&q=80"
+                     class="card-img-top"
+                     style="height:200px; object-fit:cover;">
 
-<div class="card mb-4 shadow-sm">
-    <div class="card-body">
+                <div class="card-body">
+                    <h5>{{ course.title }}</h5>
+                    <p>{{ course.description[:100] }}...</p>
 
-        <h4>{{ course.title }}</h4>
-        <p>{{ course.description }}</p>
+                    <p>
+                        Students Enrolled:
+                        <strong>{{ course.enrollments|length }}</strong>
+                    </p>
 
-        <p><strong>Students Enrolled:</strong>
-            {{ course.enrollments|length }}
-        </p>
+                    <a href="/course/{{ course.id }}/students"
+                       class="btn btn-outline-primary btn-sm">
+                        View Students
+                    </a>
 
-        <a href="/course/{{ course.id }}/students"
-           class="btn btn-info btn-sm">
-           View Students
-        </a>
+                    <a href="/edit-course/{{ course.id }}"
+                       class="btn btn-warning btn-sm">
+                        Edit
+                    </a>
 
+                    <a href="/delete-course/{{ course.id }}"
+                       class="btn btn-danger btn-sm">
+                        Delete
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    {% endfor %}
     </div>
-</div>
-
 {% else %}
     <p>No courses created yet.</p>
-{% endfor %}
+{% endif %}
 
 {% endblock %}
