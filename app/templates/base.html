@@ -19,12 +19,10 @@
 
 <hr>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-        {% for category, message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+{% with messages = get_flashed_messages() %}
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
 {% endwith %}
 
 {% block content %}{% endblock %}

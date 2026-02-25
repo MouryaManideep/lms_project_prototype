@@ -30,9 +30,10 @@
         "app",
         "config.py",
         "run.py",
-        ".gitattributes",
         "instance",
-        "requirements.txt"
+        "requirements.txt",
+        ".gitattributes",
+        ".gitignore"
       ],
       "type": "manual"
     },
@@ -43,6 +44,7 @@
         "models.py",
         "auth.py",
         "routes.py",
+        "decorators.py",
         "templates",
         "static"
       ],

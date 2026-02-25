@@ -1,0 +1,4 @@
+lmsReq/
+instance/
+*.db
+__pycache__/

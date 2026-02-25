@@ -6,7 +6,6 @@ from . import db
 
 auth = Blueprint("auth", __name__)
 
-# ---------------- REGISTER ----------------
 @auth.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -17,7 +16,7 @@ def register():
 
         existing_user = User.query.filter_by(email=email).first()
         if existing_user:
-            flash("Email already registered!", "danger")
+            flash("Email already registered!")
             return redirect(url_for("auth.register"))
 
         hashed_password = generate_password_hash(password)
@@ -32,13 +31,12 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash("Registration successful! Please login.", "success")
+        flash("Registration successful! Please login.")
         return redirect(url_for("auth.login"))
 
     return render_template("register.html")
 
 
-# ---------------- LOGIN ----------------
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -49,18 +47,17 @@ def login():
 
         if user and check_password_hash(user.password, password):
             login_user(user)
-            flash("Login successful!", "success")
+            flash("Login successful!")
             return redirect(url_for("main.home"))
         else:
-            flash("Invalid email or password!", "danger")
+            flash("Invalid email or password!")
 
     return render_template("login.html")
 
 
-# ---------------- LOGOUT ----------------
 @auth.route("/logout")
 @login_required
 def logout():
     logout_user()
-    flash("You have logged out.", "info")
+    flash("Logged out successfully.")
     return redirect(url_for("main.home"))
