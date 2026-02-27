@@ -1,33 +1,33 @@
-{% extends "base.html" %}
-{% block content %}
+<!-- Template: course_students.html
 
-<h2 class="mb-4">
-    Students Enrolled in "{{ course.title }}"
-</h2>
+Purpose: list students enrolled in a specific course. Expects `course`.
+Context: `course` with `enrollments` (list of Enrollment objects).
+-->
+{% extends "base.html" %} {% block content %}
 
-<p><strong>Total Students:</strong>
-    {{ course.enrollments|length }}
+<h2 class="mb-4">Students Enrolled in "{{ course.title }}"</h2>
+
+<p>
+  <strong>Total Students:</strong>
+  {{ course.enrollments|length }}
 </p>
 
-<hr>
+<hr />
 
 {% if course.enrollments %}
 
 <ul class="list-group mb-3">
-    {% for enrollment in course.enrollments %}
-        <li class="list-group-item">
-            {{ enrollment.student.username }}
-            ({{ enrollment.student.email }})
-        </li>
-    {% endfor %}
+  {% for enrollment in course.enrollments %}
+  <li class="list-group-item">
+    {{ enrollment.student.username }} ({{ enrollment.student.email }})
+  </li>
+  {% endfor %}
 </ul>
 
 {% else %}
-    <p>No students enrolled yet.</p>
+<p>No students enrolled yet.</p>
 {% endif %}
 
-<a href="/dashboard" class="btn btn-secondary">
-    Back to Dashboard
-</a>
+<a href="/dashboard" class="btn btn-secondary"> Back to Dashboard </a>
 
 {% endblock %}

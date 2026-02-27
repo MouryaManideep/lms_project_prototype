@@ -1,6 +1,15 @@
 from . import db, login_manager
 from flask_login import UserMixin
 
+"""app.models
+
+Database models used by the LMS prototype.
+
+Contains:
+- User: represents students and instructors
+- Course: course metadata and instructor relation
+- Enrollment: association between students and courses
+"""
 
 
 # ==========================================================
@@ -46,6 +55,18 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f"<User {self.username} ({self.role})>"
 
+    """User model docstring.
+
+    Attributes:
+        id: primary key
+        username: display name
+        email: contact/login email
+        password: hashed password
+        role: 'student' or 'instructor'
+        courses: relationship to courses (if instructor)
+        enrollments: relationship to Enrollment (if student)
+    """
+
 
 # ==========================================================
 # COURSE MODEL
@@ -86,6 +107,17 @@ class Course(db.Model):
     def __repr__(self):
         return f"<Course {self.title}>"
 
+    """Course model docstring.
+
+    Attributes:
+        id: primary key
+        title: course title
+        description: full course description
+        thumbnail: image URL
+        instructor_id: FK to User (instructor)
+        enrollments: relationship to Enrollment
+    """
+
 
 # ==========================================================
 # ENROLLMENT MODEL
@@ -116,6 +148,15 @@ class Enrollment(db.Model):
 
     def __repr__(self):
         return f"<Enrollment student={self.student_id} course={self.course_id}>"
+
+    """Enrollment model docstring.
+
+    Represents a student's enrollment in a course.
+    Attributes:
+        id: primary key
+        student_id: FK to User
+        course_id: FK to Course
+    """
 
 
 # ==========================================================

@@ -7,6 +7,15 @@ from . import db
 from .decorators import role_required
 
 
+"""Main application routes.
+
+This module registers the `main` blueprint and defines view functions
+for listing courses, creating/editing/deleting courses (instructor-only),
+and student enrollment flows. Each view has a short docstring explaining
+its purpose and expected template variables.
+"""
+
+
 # ----------------------------------
 # BLUEPRINT
 # ----------------------------------
@@ -18,6 +27,14 @@ main = Blueprint("main", __name__)
 # ----------------------------------
 @main.route("/")
 def home():
+    """Render the home page with course listing.
+
+    Template: `index.html`
+    Context:
+        courses: list of Course
+        enrolled_course_ids: list of course ids for current student
+        sort_by, order: sorting options
+    """
 
     sort_by = request.args.get("sort", "title")
     order = request.args.get("order", "asc")
@@ -75,6 +92,10 @@ def home():
 @login_required
 @role_required("instructor")
 def create_course():
+    """Instructor-only: create a new course.
+
+    Template: `create_course.html`
+    """
 
     if request.method == "POST":
         title = request.form.get("title")
@@ -102,6 +123,11 @@ def create_course():
 @login_required
 @role_required("instructor")
 def edit_course(course_id):
+    """Instructor-only: edit an existing course.
+
+    Template: `edit_course.html`
+    Context: course
+    """
 
     course = Course.query.get_or_404(course_id)
 
@@ -127,6 +153,7 @@ def edit_course(course_id):
 @login_required
 @role_required("instructor")
 def delete_course(course_id):
+    """Instructor-only: delete a course owned by the instructor."""
 
     course = Course.query.get_or_404(course_id)
 
@@ -148,6 +175,11 @@ def delete_course(course_id):
 @login_required
 @role_required("instructor")
 def instructor_dashboard():
+    """Instructor dashboard showing summary cards and course list.
+
+    Template: `dashboard.html`
+    Context: courses, total_courses, total_students
+    """
 
     courses = Course.query.filter_by(
         instructor_id=current_user.id
@@ -172,6 +204,11 @@ def instructor_dashboard():
 @login_required
 @role_required("instructor")
 def course_students(course_id):
+    """Show students enrolled in a specific course.
+
+    Template: `course_students.html`
+    Context: course (with enrollments)
+    """
 
     course = Course.query.get_or_404(course_id)
 
@@ -189,6 +226,7 @@ def course_students(course_id):
 @login_required
 @role_required("student")
 def enroll(course_id):
+    """Student-only: enroll the current user into a course."""
 
     existing = Enrollment.query.filter_by(
         student_id=current_user.id,
@@ -218,6 +256,11 @@ def enroll(course_id):
 @login_required
 @role_required("student")
 def student_dashboard():
+    """Student dashboard listing current user's enrollments.
+
+    Template: `student_dashboard.html`
+    Context: enrollments
+    """
 
     enrollments = Enrollment.query.filter_by(
         student_id=current_user.id
@@ -236,6 +279,7 @@ def student_dashboard():
 @login_required
 @role_required("student")
 def unenroll(course_id):
+    """Student-only: remove enrollment for current user and course."""
 
     # Find enrollment
     enrollment = Enrollment.query.filter_by(

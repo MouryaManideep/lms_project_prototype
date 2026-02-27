@@ -2,6 +2,12 @@ from functools import wraps
 from flask_login import current_user
 from flask import redirect, url_for, flash
 
+"""Authorization helpers.
+
+This module provides decorator(s) to restrict access to views based
+on the `User.role` value.
+"""
+
 
 # ----------------------------------
 # ROLE REQUIRED DECORATOR
@@ -9,6 +15,15 @@ from flask import redirect, url_for, flash
 # Ensures only users with specific role
 # can access certain routes
 def role_required(role):
+
+    """Return a decorator that restricts access to users with `role`.
+
+    Usage:
+        @login_required
+        @role_required("instructor")
+        def view():
+            ...
+    """
 
     def decorator(func):
 

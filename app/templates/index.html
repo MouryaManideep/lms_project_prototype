@@ -1,98 +1,91 @@
-{% extends "base.html" %}
-{% block content %}
+<!-- Template: index.html
+
+Purpose: show the course grid with sorting and enrollment controls.
+Context variables: `courses`, `enrolled_course_ids`, `sort_by`, `order`, `current_user`.
+-->
+{% extends "base.html" %} {% block content %}
 
 <h2 class="mb-4">All Courses</h2>
 
 <!-- SORT FILTER -->
 <form method="GET" class="row mb-4">
+  <div class="col-md-4">
+    <select name="sort" class="form-select">
+      <option value="title" {% if sort_by == "title" %}selected{% endif %}>
+        Alphabetical
+      </option>
 
-    <div class="col-md-4">
-        <select name="sort" class="form-select">
-            <option value="title"
-                {% if sort_by == "title" %}selected{% endif %}>
-                Alphabetical
-            </option>
+      <option value="instructor" {% if sort_by == "instructor" %}selected{% endif %}>
+        Instructor
+      </option>
+    </select>
+  </div>
 
-            <option value="instructor"
-                {% if sort_by == "instructor" %}selected{% endif %}>
-                Instructor
-            </option>
-        </select>
-    </div>
+  <div class="col-md-4">
+    <select name="order" class="form-select">
+      <option value="asc" {% if order == "asc" %}selected{% endif %}>
+        Ascending
+      </option>
 
-    <div class="col-md-4">
-        <select name="order" class="form-select">
-            <option value="asc"
-                {% if order == "asc" %}selected{% endif %}>
-                Ascending
-            </option>
+      <option value="desc" {% if order == "desc" %}selected{% endif %}>
+        Descending
+      </option>
+    </select>
+  </div>
 
-            <option value="desc"
-                {% if order == "desc" %}selected{% endif %}>
-                Descending
-            </option>
-        </select>
-    </div>
-
-    <div class="col-md-4">
-        <button class="btn btn-primary w-100">
-            Apply
-        </button>
-    </div>
-
+  <div class="col-md-4">
+    <button class="btn btn-primary w-100">Apply</button>
+  </div>
 </form>
 
 <div class="row">
-
-<div class="row">
-{% for course in courses %}
+  <div class="row">
+    {% for course in courses %}
     <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <!-- COURSE IMAGE -->
+        <img
+          src="{{ course.thumbnail }}?auto=format&fit=crop&w=800&q=80"
+          class="card-img-top"
+          style="height: 200px; object-fit: cover"
+        />
 
-        <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">{{ course.title }}</h5>
 
-            <!-- COURSE IMAGE -->
-            <img src="{{ course.thumbnail }}?auto=format&fit=crop&w=800&q=80"
-                 class="card-img-top"
-                 style="height:200px; object-fit:cover;">
+          <p class="card-text">{{ course.description[:100] }}...</p>
 
-            <div class="card-body">
+          <small class="text-muted">
+            Instructor: {{ course.instructor.username }}
+          </small>
 
-                <h5 class="card-title">{{ course.title }}</h5>
+          <br /><br />
 
-                <p class="card-text">
-                    {{ course.description[:100] }}...
-                </p>
+          <!-- Instructor Controls -->
+          {% if current_user.is_authenticated and current_user.role ==
+          "instructor" and course.instructor_id == current_user.id %}
+          <a href="/edit-course/{{ course.id }}" class="btn btn-warning btn-sm"
+            >Edit</a
+          >
+          <a href="/delete-course/{{ course.id }}" class="btn btn-danger btn-sm"
+            >Delete</a
+          >
+          {% endif %}
 
-                <small class="text-muted">
-                    Instructor: {{ course.instructor.username }}
-                </small>
-
-                <br><br>
-
-                <!-- Instructor Controls -->
-                {% if current_user.is_authenticated
-                      and current_user.role == "instructor"
-                      and course.instructor_id == current_user.id %}
-                    <a href="/edit-course/{{ course.id }}" class="btn btn-warning btn-sm">Edit</a>
-                    <a href="/delete-course/{{ course.id }}" class="btn btn-danger btn-sm">Delete</a>
-                {% endif %}
-
-                <!-- Student Enroll -->
-                {% if current_user.is_authenticated and current_user.role == "student" %}
-                    {% if course.id in enrolled_course_ids %}
-                        <button class="btn btn-success btn-sm" disabled>Enrolled</button>
-                    {% else %}
-                        <a href="/enroll/{{ course.id }}" class="btn btn-primary btn-sm">Enroll</a>
-                    {% endif %}
-                {% endif %}
-
-            </div>
+          <!-- Student Enroll -->
+          {% if current_user.is_authenticated and current_user.role == "student"
+          %} {% if course.id in enrolled_course_ids %}
+          <button class="btn btn-success btn-sm" disabled>Enrolled</button>
+          {% else %}
+          <a href="/enroll/{{ course.id }}" class="btn btn-primary btn-sm"
+            >Enroll</a
+          >
+          {% endif %} {% endif %}
         </div>
-
+      </div>
     </div>
-{% endfor %}
-</div>
-
+    {% endfor %}
+  </div>
 </div>
 
 {% endblock %}

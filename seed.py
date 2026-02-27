@@ -1,3 +1,11 @@
+"""Database seeder for demo data.
+
+This script resets the local SQLite database, creates demo instructors
+and students, creates a set of sample courses, and enrolls students
+randomly into courses. Run with `python seed.py` after installing
+requirements and creating the virtual environment.
+"""
+
 import random
 from app import create_app, db
 from app.models import User, Course, Enrollment
