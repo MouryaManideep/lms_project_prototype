@@ -8,5 +8,5 @@ from app import create_app
 
 app = create_app()
 
-# Note: when running directly, this starts Flask's built-in server.
-app.run(debug=True, use_reloader=False)
+if __name__ == "__main__":
+    app.run()

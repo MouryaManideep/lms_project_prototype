@@ -1,0 +1,10 @@
+services:
+
+- type: web
+  name: lms-app
+  runtime: python
+  buildCommand: "pip install -r requirements.txt"
+  startCommand: "gunicorn run:app"
+  envVars:
+  - key: PYTHON_VERSION
+    value: 3.11
