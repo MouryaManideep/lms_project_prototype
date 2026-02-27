@@ -1,5 +1,5 @@
-lmsReq/
-*.db
 __pycache__/
-*.pyc
 instance/
+lmsReq/
+*.pyc
+.env

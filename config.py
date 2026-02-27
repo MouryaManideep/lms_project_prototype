@@ -1,9 +1,18 @@
+
+"""
+Configuration for the Flask app.
+
+Keep secrets out of source control in real projects.
+"""
+
+import os
+
 class Config:
-    """Configuration for the Flask app.
+    SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-    Keep secrets out of source control in real projects.
-    """
+    SQLALCHEMY_DATABASE_URI = os.environ.get(
+        "DATABASE_URL",
+        "sqlite:///lms.db"
+    )
 
-    SECRET_KEY = "supersecretkey"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///lms.db"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
